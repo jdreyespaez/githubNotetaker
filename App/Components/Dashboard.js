@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import Profile from './Profile';
+import Repositories from './Repositories';
+import api from '../Utils/api';
 
 import {
   Text,
@@ -43,14 +46,31 @@ class Dashboard extends React.Component{
     return obj;
   }
   goToProfile(){
-    console.log('Going to Profile Page');
+    this.props.navigator.push({
+      component: Profile,
+      title: 'Profile Page',
+      passProps: {userInfo: this.props.userInfo}
+    });
   }
   goToRepos(){
-    console.log('Going to Repos');
+    api.getRepos(this.props.userInfo.login)
+      .then((res) => {
+        this.props.navigator.push({
+          component: Repositories,
+          title: 'Repos',
+          passProps: {
+            userInfo: this.props.userInfo,
+            repos: res
+          }
+        });
+      });
   }
   goToNotes(){
-    console.log('Going to Notes');
-  }
+    this.props.navigator.push({
+      component: Profile,
+      title: 'Profile Page',
+      passProps: {userInfo: this.props.userInfo}
+    });  }
   render(){
     return(
       <View style={styles.container}>
